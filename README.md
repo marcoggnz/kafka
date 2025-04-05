@@ -8,6 +8,10 @@ El objetivo de la práctica es diseñar e implementar un sistema de análisis de
 
 ...
 
+## Manual de Despliegue
+
+...
+
 ## Referencias
 
 ...
