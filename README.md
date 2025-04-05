@@ -1,4 +1,4 @@
-# Implementación de un Sistema de Análsis de Sentimiento de Comentarios en X
+# Implementación de un Sistema de Análisis de Sentimiento de Comentarios en X
 
 ## Objetivo
 
