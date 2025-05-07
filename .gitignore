@@ -1,0 +1,6 @@
+.venv/
+*.log
+*.csv
+*.png
+__pycache__/
+.vscode/
