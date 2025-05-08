@@ -1,93 +1,93 @@
-# Kafka Twitter Sentiment Analysis Pipeline
+# Pipeline de Análisis de Sentimientos en Twitter con Kafka
 
-A real-time sentiment analysis system using **Apache Kafka** and **Hugging Face Transformers**, powered by a local Kafka cluster in Docker. Tweets are simulated from a CSV file and analyzed using a fine-tuned BERT model. This project is part of the Master's in Big Data Architecture & Engineering at Datahack.
+Un sistema de análisis de sentimientos en tiempo real utilizando **Apache Kafka** y **Hugging Face Transformers**, impulsado por un clúster local de Kafka en Docker. Los tweets se simulan desde un archivo CSV y se analizan con un modelo BERT ajustado. Este proyecto forma parte del Máster en Big Data Architecture & Engineering en Datahack.
 
-## Technologies used
+## Tecnologías Utilizadas
 
 - **Python 3.12**
-- **Apache Kafka** (via Docker Compose)
-- **Kafka UI** for topic monitoring
-- **pandas** for data handling
-- **transformers** from Hugging Face for NLP
-- **PyTorch** (via `transformers[torch]`) as ML backend
-- **Docker Compose** for Kafka cluster
-- **Matplotlib** for basic visualizations
-- **Kafka-Python** for producing/consuming messages
+- **Apache Kafka** (mediante Docker Compose)
+- **Kafka UI** para monitorización de topics
+- **pandas** para el manejo de datos
+- **transformers** de Hugging Face para NLP
+- **PyTorch** (via `transformers[torch]`) como backend de ML
+- **Docker Compose** para el clúster de Kafka
+- **Matplotlib** para visualizaciones básicas
+- **Kafka-Python** para producir/consumir mensajes
 
-## Introduction
+## Introducción
 
-This project simulates a real-time Twitter stream by:
-1. Reading messages from a dataset (`test.csv`).
-2. Producing them to a Kafka topic (`x-data`).
-3. Consuming them using a Kafka consumer.
-4. Performing sentiment analysis on each message.
-5. Saving results to a CSV file.
-6. Visualizing the sentiment distribution.
+Este proyecto simula un flujo de Twitter en tiempo real mediante:
+1. Lectura de mensajes desde un dataset (`test.csv`).
+2. Producción de los mensajes a un tópico de Kafka (`x-data`).
+3. Consumo de los mensajes usando un consumidor de Kafka.
+4. Análisis de sentimientos de cada mensaje.
+5. Guardado de resultados en un archivo CSV.
+6. Visualización de la distribución de sentimientos.
 
-It’s ideal for learning how to integrate data streaming with machine learning pipelines in Python.
+Es ideal para aprender a integrar streaming de datos con pipelines de machine learning en Python.
 
+## Instrucciones de configuración
 
-## Setup Instructions
+### Requisitos previos
 
-### Prerequisites
-
-* Python 3.12 installed
-* Docker & Docker Compose installed
-* (WSL only) Add this to ```/etc/hosts```:
+* Python 3.12 instalado
+* Docker y Docker Compose instalados
+* (Solo WSL) Añadir esto en ```/etc/hosts```:
 ```
 127.0.0.1 kafka1 kafka2 kafka3
 ```
 
-### Option 1: One-Click Deployment (Recommended for Local Dev)
+### Opción 1: Despliegue con un clic (Recomendado para desarrollo local)
 
-1. Clone the repository
+1. Clonar el repositorio
 ```
 git clone https://github.com/marcoggnz/datahack-kafka.git
 cd datahack-kafka
 ```
 
-2. Open a terminal and make the script executable:
+2. Abrir una terminal y hacer el script ejecutable:
 
 ```
 chmod +x run_pipeline.sh
 ```
 
-3. Run the entire app:
+
+3. Ejecutar toda la app:
+
 ```
 ./run_pipeline.sh
 ```
 
-The script will:
-* Start the Kafka cluster via Docker.
-* Activate the Python virtual environment.
-* Install pinned dependencies.
-* Send tweets using the producer.
-* Analyze those tweets via the consumer.
-* Generate a sentiment bar chart.
+El script hará:
+* Iniciar el clúster de Kafka vía Docker.
+* Activar el entorno virtual de Python.
+* Instalar las dependencias fijadas.
+* Enviar tweets mediante el productor.
+* Analizar esos tweets con el consumidor.
+* Generar un gráfico de barras de sentimientos.
 
-### Option 2: Manual Setup
-1. Clone the repository
+### Opción 2: Configuración manual
+1. Clonar el repositorio
 ```
 git clone https://github.com/marcoggnz/datahack-kafka.git
 cd datahack-kafka
 ```
 
-2. Start the Kafka Cluster
-Start the local Kafka + Zookeeper cluster and Kafka UI using Docker Compose:
+2. Iniciar el clúster de Kafka  
+Iniciar el clúster local de Kafka + Zookeeper y Kafka UI usando Docker Compose:
 
 ```
 docker compose -f images/docker-compose-cluster-kafka.yml up -d
 ```
 
-3. Create and Activate a Virtual Environment
 
+3. Crear y activar un entorno virtual
 ```
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-4.  Install Python Dependencies
-
+4. Instalar dependencias de Python
 ```
 pip install kafka-python==2.1.5 \
             transformers[torch]==4.51.0 \
@@ -95,58 +95,73 @@ pip install kafka-python==2.1.5 \
             matplotlib==3.8.4
 
 ```
-Or simply run:
+O simplemente ejecutar:
 ```
 pip install -r requirements.txt
 ```
 
-5.  Run the Producer
-
+5. Ejecutar el Productor
 ```
 python src/producer.py
 ```
 
-This will send a batch of simulated tweets to Kafka.
+Esto enviará un lote de tweets simulados a Kafka.
 
-6. Run the Consumer (on a new terminal)
-
+6. Ejecutar el Consumidor (en una nueva terminal)
 ```
 python src/consumer.py
 ```
 
-It will process the messages and save results to **sentiment_results.csv**.
+Procesará los mensajes y guardará los resultados en **sentiment_results.csv**.
 
-7. Visualize the Results
-
+7. Visualizar los Resultados
 ```
 python src/visualization.py
 ```
 
-This will generate **sentiment_distribution.png** showing the sentiment breakdown.
+Esto generará **sentiment_distribution.png** mostrando el desglose de sentimientos.
 
-8. Optional Cleanup Step:
+8. Paso opcional de limpieza:
 
 ```
 docker compose -f images/docker-compose-cluster-kafka.yml down
 ```
 
-## Monitoring
+## Monitorización
 
-Open Kafka UI at http://localhost:8080
+Abrir Kafka UI en http://localhost:8080
 
-## Project Structure
+## Estructura del Proyecto
 
-<pre> ```text ├── data/ │ └── test.csv ├── images/ │ ├── docker-compose-cluster-kafka.yml │ └── Dockerfile ├── src/ │ ├── config.py │ ├── producer.py │ ├── consumer.py │ └── visualization.py ├── run_pipeline.sh # One-click startup script 🟢 ├── sentiment_results.csv # Output file with predictions ├── sentiment_distribution.png # Chart of sentiment results ├── producer.log # Log file ├── consumer.log # Log file ├── README.md # You are here └── .venv/ # Virtual environment (not committed) ``` </pre>
+```
+├── data/
+│   └── test.csv
+├── images/
+│   ├── docker-compose-cluster-kafka.yml
+│   └── Dockerfile
+├── src/
+│   ├── config.py
+│   ├── producer.py
+│   ├── consumer.py
+│   └── visualization.py
+├── run_pipeline.sh           # Script de inicio con un clic 🟢
+├── sentiment_results.csv     # Archivo de salida con predicciones
+├── sentiment_distribution.png # Gráfico de resultados de sentimiento
+├── producer.log              # Archivo de log
+├── consumer.log              # Archivo de log
+├── README.md                 # Estás aquí
+└── .venv/                    # Entorno virtual (no se sube al repositorio)
+```
 
-## Notes
+## Notas
 
-* Topic name, sample size, and model are configurable via config.py.
-* Logs go to both the terminal and files.
-* Designed for local dev but extensible for cloud use.
+* El nombre del tópico, el tamaño de muestra y el modelo son configurables en config.py.
+* Los logs se registran tanto en terminal como en archivos.
+* Diseñado para desarrollo local, pero extensible para uso en la nube.
 
-## Ideas for Improvement
+## Ideas de mejora
 
-There are plenty of ways this project can be improved since the main goal is to get comfy with the Kafka environment and flow. However some room for improvement could be:
-* Build a dashboard (e.g. Streamlit, Dash).
-* Send results to a database or API.
-* Integrate with managed Kafka platforms (like Confluent Cloud).
+Hay muchas formas en las que este proyecto puede mejorar, ya que el objetivo principal es familiarizarse con el entorno y flujo de Kafka. Algunas posibles mejoras son:
+* Construir un dashboard (por ejemplo, con Streamlit o Dash).
+* Enviar resultados a una base de datos o API.
+* Integrarse con plataformas Kafka gestionadas (como Confluent Cloud).
