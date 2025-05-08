@@ -67,7 +67,7 @@ def analyze_message(message, results):
     )
 
 # Main loop to consume and process Kafka messages
-def main():
+def run_consumer():
     logging.info("Starting Kafka consumer ...")
     results = []
     try:
@@ -87,4 +87,4 @@ def main():
         consumer.close()
 
 if __name__ == "__main__":
-    main()
+    run_consumer()

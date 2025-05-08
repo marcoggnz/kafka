@@ -10,7 +10,12 @@ echo "Activating virtual environment..."
 source .venv/bin/activate
 
 echo "Installing dependencies..."
-pip install -q kafka-python transformers[torch] pandas matplotlib
+# Explicit version pinning
+pip install --quiet \
+    kafka-python==2.1.5 \
+    transformers[torch]==4.51.0 \
+    pandas==2.2.3 \
+    matplotlib==3.8.4
 
 echo "Sending tweets with the Kafka producer ..."
 python src/producer.py

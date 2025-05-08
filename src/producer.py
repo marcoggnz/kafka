@@ -32,7 +32,7 @@ def on_send_error(ex):
     logging.error(f"Error while producing message to Kafka topic: {config.TOPIC}", exc_info=ex)
 
 # Load and preprocess CSV data for sending
-def load_data():
+def prepare_sample_data():
     df = pd.read_csv(config.DATASET_PATH, sep=",", encoding="latin1")
     # Remove rows with missing or empty 'text'
     df = df[df["text"].notnull() & (df["text"].str.strip() != "")]
@@ -41,8 +41,8 @@ def load_data():
     return df.sample(n=config.SAMPLE_SIZE).to_dict("records")
 
 # Main producer logic
-def main():
-    data_to_send = load_data()
+def run_producer():
+    data_to_send = prepare_sample_data()
     print(f"Loaded {len(data_to_send)} messages to send.")
     for msg in data_to_send:
         # Use country name as message key
@@ -57,4 +57,4 @@ def main():
     producer.flush()
 
 if __name__ == "__main__":
-    main()
+    run_producer()
